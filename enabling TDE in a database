@@ -1,0 +1,32 @@
+Steps in enabling TDE in a database named TDE_Demo
+
+1. Set a master key within the master database using the CREATE MASTER KEY ENCRYPTION command.
+
+USE master;
+GO
+
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'Pa55.w.rd';
+GO
+
+2. Create a certificate in the master database, which will be used for the encryption using the CREATE CERTIFICATE command.
+
+CREATE CERTIFICATE MyServerCert
+    WITH SUBJECT = 'TDEDemo_Certificate';
+GO
+
+3. Create a database encryption key within the database, which allows you to enable TDE with the CREATE DATABASE ENCRYPTION KEY command.
+
+USE [TDE_Demo];
+GO
+
+CREATE DATABASE ENCRYPTION KEY
+    WITH ALGORITHM = AES_256 ENCRYPTION BY SERVER CERTIFICATE MyServerCert;
+GO
+
+4. Once the encryption key is created, it needs to be enabled using the ALTER DATABASE command.
+
+ALTER DATABASE TDE_Demo SET ENCRYPTION ON;
+GO
+
+
+https://learn.microsoft.com/en-us/training/modules/protect-data-transit-rest/2-explore-transparent-data-encryption
